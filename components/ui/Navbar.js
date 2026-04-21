@@ -3,179 +3,161 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { cinematicScroll } from "@/lib/cinematicScroll";
 
 const NAV_LINKS = [
-  { name: "Home", href: "#top" },
+  { name: "Home",         href: "#top" },
   { name: "Capabilities", href: "#services" },
-  { name: "Products", href: "#products" },
-  { name: "Process", href: "#process" }, // Future section
-  { name: "Contact", href: "#cta" },
+  { name: "Products",     href: "#products" },
+  { name: "Process",      href: "#ai-expertise" },
+  { name: "Contact",      href: "#contact" },
 ];
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("#top");
+  const [isScrolled,       setIsScrolled]       = useState(false);
+  const [activeSection,    setActiveSection]    = useState("#top");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Handle Scroll and Active State
   useEffect(() => {
-    const handleScroll = () => {
-      // Toggle frosted glass effect
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-
-      // Scroll Spy Logic
-      let currentSection = "#top";
+    const onScroll = () => {
+      const scrolled = window.scrollY;
+      const total    = document.documentElement.scrollHeight - window.innerHeight;
+      document.documentElement.style.setProperty(
+        "--scroll-progress",
+        total > 0 ? (scrolled / total).toString() : "0"
+      );
+      setIsScrolled(scrolled > 50);
+      if (scrolled < 100) { setActiveSection("#top"); return; }
       for (const link of NAV_LINKS) {
         if (link.href === "#top") continue;
-        const element = document.querySelector(link.href);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          // If the top of the section is near the top of the viewport
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            currentSection = link.href;
-          }
+        const el = document.querySelector(link.href);
+        if (el) {
+          const { top, bottom } = el.getBoundingClientRect();
+          if (top <= 160 && bottom >= 160) setActiveSection(link.href);
         }
       }
-      
-      // Edge case for top of page
-      if (window.scrollY < 100) {
-        currentSection = "#top";
-      }
-
-      setActiveSection(currentSection);
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleLinkClick = (e, href) => {
+  const scrollTo = (e, href) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    
     if (href === "#top") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      cinematicScroll(0, 1000);
       return;
     }
-
-    const element = document.querySelector(href);
-    if (element) {
-      // Offset by 80px (navbar height) to not overlap content
-      const y = element.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top: y, behavior: "smooth" });
+    const el = document.querySelector(href);
+    if (el) {
+      const target = el.getBoundingClientRect().top + window.scrollY - 80;
+      cinematicScroll(target, 1000);
     }
   };
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
           isScrolled
-            ? "bg-white/80 backdrop-blur-lg border-b border-border shadow-sm py-4"
-            : "bg-transparent border-b border-transparent py-6"
+            ? "bg-white/82 backdrop-blur-2xl border-b border-[var(--color-border)] shadow-[0_1px_32px_rgba(0,0,0,0.06)]"
+            : "bg-transparent"
         }`}
+        style={{ height: "var(--navbar-height)" }}
       >
-        <div className="section-container flex items-center justify-between">
-          
-          {/* Left: Logo */}
-          <a
-            href="#top"
-            onClick={(e) => handleLinkClick(e, "#top")}
-            className="flex items-center gap-3 relative z-50"
-          >
-            {/* We provide a fallback text if logo.png fails to load */}
-            <div className="relative w-8 h-8 md:w-10 md:h-10">
-              <Image 
-                src="/logo.png" 
-                alt="Andromeda Logo" 
-                fill 
-                className="object-contain"
-                sizes="40px"
-                onError={(e) => {
-                  // Fallback if image doesn't exist
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </div>
-            <span className="font-heading text-xl font-bold uppercase text-[var(--color-primary)]">
-              Andromeda
-            </span>
+        <div className="section-container h-full flex items-center justify-between">
+
+          {/* Logo */}
+          <a href="#top" onClick={(e) => scrollTo(e, "#top")}
+            className="flex items-center relative z-50 group flex-shrink-0">
+            <Image src="/logo.png" alt="Andromeda" width={181} height={56}
+              className="object-contain transition-all duration-300 group-hover:scale-[1.03] group-hover:opacity-90"
+              priority />
           </a>
 
-          {/* Right: Desktop Links */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop links */}
+          <nav className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.href;
-              
               return (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className={`text-body-sm font-semibold transition-colors duration-300 relative group ${
-                    isActive ? "text-[var(--color-primary)]" : "text-black hover:text-[var(--color-primary)]"
+                <a key={link.name} href={link.href} onClick={(e) => scrollTo(e, link.href)}
+                  className={`relative text-[0.9375rem] font-semibold tracking-wide py-1.5 transition-colors duration-200 group ${
+                    isActive ? "text-[var(--color-primary)]" : "text-black/50 hover:text-black"
                   }`}
                 >
                   {link.name}
-                  
-                  {/* Hover Underline Animation (scaleX) */}
-                  <span 
-                    className={`absolute -bottom-1 left-0 w-full h-[2px] bg-[var(--color-primary)] origin-left transition-transform duration-300 ease-out ${
-                      isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                    }`} 
-                  />
+                  <span className={`absolute bottom-0 left-0 w-full h-[1.5px] bg-[var(--color-primary)] origin-left transition-transform duration-300 ${
+                    isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`} />
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-dot"
+                      className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--color-primary)]"
+                      transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                    />
+                  )}
                 </a>
               );
             })}
-          </div>
+          </nav>
 
-          {/* Mobile Hamburger Toggle */}
-          <button
-            className="md:hidden relative z-50 p-2 text-black"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle Menu"
+          {/* CTA */}
+          <motion.a href="#contact" onClick={(e) => scrollTo(e, "#contact")}
+            whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
+            className="hidden md:inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] text-white text-[0.9375rem] font-semibold px-6 py-2.5 hover:bg-[var(--color-primary-dark)] transition-colors duration-200 shadow-[0_4px_20px_rgba(89,32,161,0.25)] flex-shrink-0"
           >
-            <div className="w-6 flex flex-col items-end gap-1.5">
-              <span className={`block h-[2px] bg-current transition-all duration-300 ${isMobileMenuOpen ? "w-6 rotate-45 translate-y-[8px]" : "w-6"}`} />
-              <span className={`block h-[2px] bg-current transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : "w-4"}`} />
-              <span className={`block h-[2px] bg-current transition-all duration-300 ${isMobileMenuOpen ? "w-6 -rotate-45 -translate-y-[8px]" : "w-5"}`} />
+            Get in touch
+          </motion.a>
+
+          {/* Hamburger */}
+          <button className="md:hidden relative z-50 p-2 -mr-2 text-black"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle Menu">
+            <div className="w-6 flex flex-col items-end gap-[5px]">
+              <span className={`block h-[2px] bg-current rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-6 rotate-45 translate-y-[7px]" : "w-6"}`} />
+              <span className={`block h-[2px] bg-current rounded-full transition-all duration-300 ${isMobileMenuOpen ? "opacity-0 w-6" : "w-4"}`} />
+              <span className={`block h-[2px] bg-current rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-6 -rotate-45 -translate-y-[7px]" : "w-5"}`} />
             </div>
           </button>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-6 md:hidden"
+            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 bg-white flex flex-col md:hidden"
+            style={{ paddingTop: "var(--navbar-height)" }}
           >
-            <div className="flex flex-col gap-6 items-center text-center">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className={`text-h2 font-heading w-full py-4 border-b border-border transition-colors ${
-                    activeSection === link.href ? "text-[var(--color-primary)]" : "text-black"
+            <div className="flex flex-col px-6 pt-8">
+              {NAV_LINKS.map((link, i) => (
+                <motion.a key={link.name} href={link.href}
+                  onClick={(e) => scrollTo(e, link.href)}
+                  initial={{ opacity: 0, x: -24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  className={`text-[2rem] font-heading py-4 border-b border-[var(--color-border)] transition-colors ${
+                    activeSection === link.href ? "text-[var(--color-primary)]" : "text-black/65"
                   }`}
                 >
                   {link.name}
-                </a>
+                </motion.a>
               ))}
+              <motion.a href="#contact" onClick={(e) => scrollTo(e, "#contact")}
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.34, duration: 0.38 }}
+                className="mt-8 self-start inline-flex items-center justify-center rounded-full bg-[var(--color-primary)] text-white text-[1.0625rem] font-semibold px-8 py-4 shadow-[0_4px_20px_rgba(89,32,161,0.3)]"
+              >
+                Get in touch
+              </motion.a>
             </div>
           </motion.div>
         )}

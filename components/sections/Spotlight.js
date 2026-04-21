@@ -20,7 +20,6 @@ export default function Spotlight() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         {/* Abstract 3D Visualization Placeholder */}
         <motion.div style={{ y: y1 }} className="relative h-[400px] w-full flex items-center justify-center">
-          <div className="w-[300px] h-[300px] rounded-full bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-secondary)] opacity-10 blur-3xl absolute" />
           <div className="w-[200px] h-[200px] rounded-full border border-[var(--color-primary)] opacity-20 absolute" />
           <div className="w-[240px] h-[240px] rounded-full border border-[var(--color-secondary)] opacity-10 absolute rotate-45" />
           <motion.div
@@ -32,7 +31,7 @@ export default function Spotlight() {
 
         {/* Text Content */}
         <motion.div variants={slideRight} className="max-w-md">
-          <span className="text-overline text-[var(--color-accent)] block mb-4">Flagship</span>
+          <span className="text-overline text-[var(--color-primary)] block mb-4">Flagship</span>
           <h2 className="text-h2 mb-6">Andromeda Core</h2>
           <p className="text-body text-muted mb-8">
             The foundation of invisible infrastructure. Deploy intelligent routing, global state sync, and edge compute without managing a single server.

@@ -118,7 +118,7 @@ export default function ScrollCanvas({
     // Initial draw
     render(0);
 
-    // 4. SCROLL MAPPING
+    // 4. SCROLL MAPPING WITH STAGED ANIMATION
     const handleScroll = () => {
       const scrollPos = window.scrollY;
       const offsetTop = container.offsetTop;
@@ -129,16 +129,47 @@ export default function ScrollCanvas({
       let scrollFraction = (scrollPos - offsetTop) / (containerHeight - viewportHeight);
       scrollFraction = Math.max(0, Math.min(1, scrollFraction));
 
-      // Map progress to exact frame index
+      // STAGED ANIMATION LOGIC
+      // Stage 1 (0-25%): scattered components
+      // Stage 2 (25-50%): alignment
+      // Stage 3 (50-75%): assembly
+      // Stage 4 (75-100%): final product with pause
+      
+      let stagedProgress;
+      
+      if (scrollFraction < 0.25) {
+        // Stage 1: scattered (0-25% of frames)
+        stagedProgress = easeOut(scrollFraction / 0.25) * 0.25;
+      } else if (scrollFraction < 0.5) {
+        // Stage 2: alignment (25-50% of frames)
+        stagedProgress = 0.25 + easeOut((scrollFraction - 0.25) / 0.25) * 0.25;
+      } else if (scrollFraction < 0.75) {
+        // Stage 3: assembly (50-75% of frames)
+        stagedProgress = 0.5 + easeOut((scrollFraction - 0.5) / 0.25) * 0.25;
+      } else {
+        // Stage 4: final product with pause (75-100% of frames)
+        const finalStageProgress = (scrollFraction - 0.75) / 0.25;
+        stagedProgress = 0.75 + easeOut(finalStageProgress) * 0.25;
+        
+        // Pause at final frame when reaching 95%
+        if (scrollFraction >= 0.95) {
+          stagedProgress = 1.0;
+        }
+      }
+
+      // Map staged progress to frame index
       const frameIndex = Math.min(
         frameCount - 1,
-        Math.floor(scrollFraction * frameCount)
+        Math.floor(stagedProgress * frameCount)
       );
 
       // PERFORMANCE: requestAnimationFrame ensures we only render on optimal screen refreshes
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       animationFrameId = requestAnimationFrame(() => render(frameIndex));
     };
+
+    // easeOut function for smooth transitions between stages
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
     // RESPONSIVENESS: Reset dimensions and re-render on resize
     const handleResize = () => {

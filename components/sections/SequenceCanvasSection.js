@@ -13,24 +13,23 @@ export default function SequenceCanvasSection() {
     offset: ["start start", "end end"],
   });
 
-  // --- TEXT 1: Ideas -> Engineered ---
-  // Opacity: fades in (0.05 - 0.15), stays (0.15 - 0.25), fades out (0.25 - 0.35)
-  const opacity1 = useTransform(scrollYProgress, [0.05, 0.15, 0.25, 0.35], [0, 1, 1, 0]);
-  // Vertical Parallax: moves slightly up while visible
-  const y1 = useTransform(scrollYProgress, [0.05, 0.35], [40, -40]);
+  // --- TEXT 1: Ideas -> Engineered (Stage 1: Scattered) ---
+  // Synced with animation stage 1 (0-25%)
+  const opacity1 = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.3], [0, 1, 1, 0]);
+  const y1 = useTransform(scrollYProgress, [0, 0.3], [40, -40]);
 
-  // --- TEXT 2: Systems -> Built ---
-  // Opacity: fades in (0.35 - 0.45), stays (0.45 - 0.55), fades out (0.55 - 0.65)
-  const opacity2 = useTransform(scrollYProgress, [0.35, 0.45, 0.55, 0.65], [0, 1, 1, 0]);
-  const y2 = useTransform(scrollYProgress, [0.35, 0.65], [40, -40]);
+  // --- TEXT 2: Systems -> Built (Stage 2-3: Alignment & Assembly) ---
+  // Synced with animation stages 2-3 (25-75%)
+  const opacity2 = useTransform(scrollYProgress, [0.3, 0.4, 0.65, 0.75], [0, 1, 1, 0]);
+  const y2 = useTransform(scrollYProgress, [0.3, 0.75], [40, -40]);
 
-  // --- TEXT 3: Solutions -> Delivered ---
-  // Opacity: fades in (0.65 - 0.75), stays (0.75 - 0.90), fades out (0.90 - 1.0)
-  const opacity3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1.0], [0, 1, 1, 0]);
-  const y3 = useTransform(scrollYProgress, [0.65, 1.0], [40, -40]);
+  // --- TEXT 3: Solutions -> Delivered (Stage 4: Final Product) ---
+  // Synced with animation stage 4 (75-100%) and stays visible during pause
+  const opacity3 = useTransform(scrollYProgress, [0.7, 0.8, 0.95, 1.0], [0, 1, 1, 1]);
+  const y3 = useTransform(scrollYProgress, [0.7, 1.0], [40, 0]);
 
   return (
-    <section ref={containerRef} className="snap-start relative w-full">
+    <section ref={containerRef} className="scroll-snap-align-start relative w-full">
       <ScrollCanvas
         frameCount={240}
         framePrefix="/frames/ezgif-frame-"
