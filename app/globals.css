@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ============================================
+   ANDROMEDA DESIGN SYSTEM — Global Tokens
+   ============================================ */
+
+/* --- Brand Tokens --- */
+:root {
+  /* Colors */
+  --color-primary: #5920a1;
+  --color-primary-dark: #4e1b8e;
+  --color-secondary: #3b40c4;
+  --color-accent: #ef5a98;
+  --color-black: #000000;
+  --color-surface: #fafafa;
+  --color-surface-elevated: #ffffff;
+  --color-surface-tinted: #f8f5ff;
+  --color-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-border-hover: rgba(89, 32, 161, 0.15);
+
+  /* Typography */
+  --font-heading: "Abril Fatface", Georgia, serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+
+  /* Spacing (8px grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --space-11: 160px;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 700ms;
+  --duration-cinematic: 1000ms;
+
+  /* Layout */
+  --max-width-content: 1120px;
+  --max-width-grid: 1280px;
+  --max-width-full: 1440px;
+  --section-padding: clamp(80px, 10vw, 160px);
+}
+
+/* --- Tailwind v4 Theme Extension --- */
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-surface-tinted: var(--color-surface-tinted);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
+  --color-border-hover: var(--color-border-hover);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-black);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-black);
+  font-weight: 400; /* Abril Fatface is already display weight */
+}
+
+.text-display {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-family: var(--font-heading);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.text-h1 {
+  font-size: clamp(2rem, 4.5vw, 3.75rem);
+}
+
+.text-h2 {
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+}
+
+.text-h3 {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.text-body {
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+.text-body-sm {
+  font-size: clamp(0.875rem, 1vw, 0.9375rem);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+.text-caption {
+  font-size: clamp(0.75rem, 0.85vw, 0.8125rem);
+  font-family: var(--font-body);
+  color: var(--color-muted);
+}
+
+.text-overline {
+  font-size: clamp(0.6875rem, 0.8vw, 0.75rem);
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+/* Paragraph max-width for readability */
+p {
+  max-width: 65ch;
+}
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+
+.section-container {
+  width: 100%;
+  max-width: var(--max-width-content);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-5);
+  padding-right: var(--space-5);
+}
+
+.section-container--wide {
+  max-width: var(--max-width-grid);
+}
+
+.section-container--full {
+  max-width: var(--max-width-full);
+}
+
+.section-padding {
+  padding-top: var(--section-padding);
+  padding-bottom: var(--section-padding);
+}
+
+/* ============================================
+   SELECTION & SCROLLBAR
+   ============================================ */
+
+::selection {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
