@@ -40,7 +40,7 @@ export default function Hero() {
       <CosmicBottomRight />
 
       {/* Slow orbit rings in background */}
-      <OrbitRing size={600} x="50%" y="50%" color="primary"   className="opacity-60" />
+      <OrbitRing size={600} x="2%" y="50%" color="primary"   className="opacity-60" />
       <OrbitRing size={900} x="50%" y="50%" color="secondary" className="opacity-40" />
 
       {/* Mesh gradient */}

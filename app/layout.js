@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
       className={`${abrilFatface.variable} ${nunito.variable}`}
       suppressHydrationWarning
     >
-      <body id="top">
+      <body id="top" suppressHydrationWarning={true}>
         {/* Cosmic starfield — fixed behind everything */}
         <CosmicCanvas />
         <Navbar />
