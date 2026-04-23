@@ -25,14 +25,14 @@ export default function CTA() {
           className="relative overflow-hidden rounded-3xl px-10 py-20 md:px-20 md:py-24 text-center"
           style={{ background: "linear-gradient(135deg, #5920a1 0%, #3b40c4 60%, #5920a1 100%)" }}
         >
-          {/* Animated background orbs */}
+          {/* Animated background orbs — CSS only */}
           {ORBS.map((orb, i) => (
-            <motion.div key={i}
+            <div key={i}
               className="absolute rounded-full pointer-events-none"
               style={{ width: orb.w, height: orb.h, top: orb.top, left: orb.left,
-                       background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)" }}
-              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: orb.dur, repeat: Infinity, delay: orb.delay, ease: "easeInOut" }}
+                       background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+                       animation: `cta-pulse ${orb.dur}s ease-in-out infinite`,
+                       animationDelay: `${orb.delay}s` }}
             />
           ))}
 

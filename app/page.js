@@ -33,7 +33,7 @@ function BrandEssence() {
             style={{ height: "60px" }}
             initial={{ y: 0, opacity: 0 }}
             whileInView={{ y: [0, 120, 240], opacity: [0, 1, 0] }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2.4, ease: "easeInOut" }}
           />
         </div>

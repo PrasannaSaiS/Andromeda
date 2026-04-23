@@ -21,20 +21,38 @@ export default function CosmicCanvas() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    // Respect reduced-motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let raf, W, H, t = 0;
+    let resizeTimer;
 
     const rand = seededRand(42);
+    // Fewer stars on mobile/low-end
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
     const resize = () => {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = document.documentElement.scrollHeight;
+      // Cap DPR at 2 to halve GPU memory on HiDPI screens
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width  = W + "px";
+      canvas.style.height = H + "px";
+      ctx.scale(dpr, dpr);
+    };
+
+    const debouncedResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
     };
 
     // ── Stars ─────────────────────────────────────────────────────
-    const STAR_COUNT = 300;
+    const STAR_COUNT = isMobile ? 120 : 220;
     const stars = Array.from({ length: STAR_COUNT }, () => {
       const r = rand() * 2.2 + 0.4;
       const pick = rand();
@@ -184,13 +202,14 @@ export default function CosmicCanvas() {
       raf = requestAnimationFrame(draw);
     };
 
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", debouncedResize);
     resize();
     raf = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      clearTimeout(resizeTimer);
+      window.removeEventListener("resize", debouncedResize);
     };
   }, []);
 
@@ -198,7 +217,7 @@ export default function CosmicCanvas() {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="fixed inset-0 w-full pointer-events-none"
+      className="fixed inset-0 pointer-events-none"
       style={{ zIndex: 0 }}
     />
   );

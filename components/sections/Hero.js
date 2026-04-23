@@ -5,16 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { cinematicScroll } from "@/lib/cinematicScroll";
 import { CosmicTopLeft, CosmicTopRight, CosmicBottomLeft, CosmicBottomRight, OrbitRing } from "@/components/ui/CosmicCorners";
 
-const HEADLINE = "We build what comes next.";
-
-const Ring = ({ size, delay, duration = 9 }) => (
-  <motion.div
-    className="absolute rounded-full border border-[var(--color-primary)]"
-    style={{ width: size, height: size, top: "50%", left: "50%", x: "-50%", y: "-50%", opacity: 0 }}
-    animate={{ scale: [0.85, 1.15, 0.85], opacity: [0, 0.055, 0] }}
-    transition={{ duration, repeat: Infinity, delay, ease: "easeInOut" }}
-  />
-);
+const HEADLINE_WORDS = ["We", "build", "what", "comes", "next."];
 
 export default function Hero() {
   const ref = useRef(null);
@@ -39,7 +30,7 @@ export default function Hero() {
       <CosmicBottomLeft />
       <CosmicBottomRight />
 
-      {/* Slow orbit rings in background */}
+      {/* Orbit rings — CSS animated, zero JS cost */}
       <OrbitRing size={600} x="2%" y="50%" color="primary"   className="opacity-60" />
       <OrbitRing size={900} x="50%" y="50%" color="secondary" className="opacity-40" />
 
@@ -52,9 +43,20 @@ export default function Hero() {
             radial-gradient(ellipse 40% 30% at 10% 70%, rgba(239,90,152,0.05) 0%, transparent 60%)
           `
         }} />
-        <Ring size={500} delay={0} />
-        <Ring size={700} delay={3} />
-        <Ring size={900} delay={6} />
+        {/* CSS-only pulse rings — no JS RAF cost */}
+        {[500, 700, 900].map((size, i) => (
+          <div key={size}
+            className="absolute rounded-full border border-[var(--color-primary)]"
+            style={{
+              width: size, height: size,
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              opacity: 0,
+              animation: `hero-ring-pulse 9s ease-in-out infinite`,
+              animationDelay: `${i * 3}s`,
+            }}
+          />
+        ))}
       </div>
 
       {/* Parallax content */}
@@ -74,21 +76,22 @@ export default function Hero() {
           </span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline — word-level animation (5 nodes, not 25) */}
         <motion.h1
-          className="font-heading leading-none tracking-tight text-black mb-7 whitespace-nowrap"
+          className="font-heading leading-none tracking-tight text-black mb-7"
           style={{ fontSize: "clamp(1.75rem, 5.5vw, 5.25rem)", letterSpacing: "-0.03em" }}
           initial="hidden" animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.1, delayChildren: 0.3 } } }}
         >
-          {HEADLINE.split("").map((char, i) => (
+          {HEADLINE_WORDS.map((word, i) => (
             <motion.span key={i}
               variants={{
-                hidden:  { opacity: 0, y: 56, filter: "blur(4px)" },
+                hidden:  { opacity: 0, y: 40, filter: "blur(4px)" },
                 visible: { opacity: 1, y: 0, filter: "blur(0px)",
-                  transition: { duration: 0.85, delay: 0.3 + i * 0.026, ease: [0.16, 1, 0.3, 1] } },
+                  transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] } },
               }}
-              style={{ display: "inline-block", whiteSpace: char === " " ? "pre" : "normal" }}
-            >{char}</motion.span>
+              style={{ display: "inline-block", marginRight: i < HEADLINE_WORDS.length - 1 ? "0.28em" : 0 }}
+            >{word}</motion.span>
           ))}
         </motion.h1>
 
@@ -98,7 +101,7 @@ export default function Hero() {
           style={{ maxWidth: "36rem" }}
           initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8, delay: 1.05, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
           AI systems. Developer platforms. Invisible infrastructure.
         </motion.p>
@@ -108,7 +111,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.25, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.a href="#services" onClick={(e) => handleCTA(e, "#services")}
             whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}
@@ -131,17 +134,16 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — CSS animation, no RAF */}
       <motion.div
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 1 }}
+        transition={{ delay: 1.6, duration: 1 }}
       >
         <span className="text-[0.6875rem] uppercase tracking-[0.2em] text-black/30 font-semibold">Scroll</span>
         <div className="w-px h-12 bg-[var(--color-border)] relative overflow-hidden">
-          <motion.div className="w-full h-4 bg-[var(--color-primary)] absolute top-0"
-            animate={{ y: [0, 48, 48, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }} />
+          <div className="w-full h-4 bg-[var(--color-primary)] absolute top-0"
+            style={{ animation: "scroll-dot 2.2s ease-in-out infinite" }} />
         </div>
       </motion.div>
     </section>

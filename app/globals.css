@@ -96,10 +96,44 @@ body::before {
   transition: transform 0.05s linear;
 }
 
-/* ── GPU compositing for animated elements ── */
-[data-animate],
-.motion-safe\:will-change-transform {
-  will-change: transform, opacity;
+/* ── CSS keyframes for decorative animations (compositor-thread only) ── */
+@keyframes cosmic-twinkle {
+  0%, 100% { opacity: var(--star-op, 0.6); }
+  50%       { opacity: calc(var(--star-op, 0.6) * 0.35); }
+}
+
+@keyframes cosmic-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cosmic-float-0 {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(18px, 12px); }
+}
+@keyframes cosmic-float-1 {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-14px, 16px); }
+}
+@keyframes cosmic-float-2 {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(10px, -8px); }
+}
+
+@keyframes cta-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+
+@keyframes scroll-dot {
+  0%        { transform: translateY(0);  opacity: 0; }
+  20%       { opacity: 1; }
+  80%       { opacity: 1; }
+  100%      { transform: translateY(48px); opacity: 0; }
+}
+
+@keyframes hero-ring-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+  50%       { transform: translate(-50%, -50%) scale(1.15); opacity: 0.055; }
 }
 
 /* ============================================

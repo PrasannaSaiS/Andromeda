@@ -1,7 +1,15 @@
 "use client";
 
-import { motion, useAnimationFrame } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion } from "framer-motion";
+
+/*
+  All infinite decorative animations (twinkle, sparkle-rotate, orb-pulse)
+  are now pure CSS @keyframes — they run on the compositor thread and
+  don't consume any JS/RAF budget.
+  
+  Framer Motion is kept only for the one-time entrance animations
+  (whileInView reveal) which are not infinite.
+*/
 
 /* ── Twinkling star ─────────────────────────────────────────────── */
 function Star({ x, y, r = 2, color, delay = 0, baseOp = 0.6 }) {
@@ -12,9 +20,10 @@ function Star({ x, y, r = 2, color, delay = 0, baseOp = 0.6 }) {
       whileInView={{ opacity: baseOp, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
-      animate={{ opacity: [baseOp, Math.min(1, baseOp * 1.9), baseOp * 0.5, baseOp] }}
-      // @ts-ignore framer accepts transition on animate
-      style={{ animationDuration: `${2 + delay * 3}s` }}
+      style={{
+        animation: `cosmic-twinkle ${2 + delay * 3}s ease-in-out infinite`,
+        animationDelay: `${delay}s`,
+      }}
     />
   );
 }
@@ -27,7 +36,11 @@ function Sparkle({ x, y, size = 8, color, delay = 0 }) {
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay, ease: [0.34, 1.56, 0.64, 1] }}
-      animate={{ rotate: [0, 180, 360], opacity: [0.7, 1, 0.7] }}
+      style={{
+        transformOrigin: `${x}px ${y}px`,
+        animation: `cosmic-spin 8s linear infinite`,
+        animationDelay: `${delay}s`,
+      }}
     >
       <line x1={x - size} y1={y} x2={x + size} y2={y} stroke={color} strokeWidth="1" strokeOpacity="0.8" />
       <line x1={x} y1={y - size} x2={x} y2={y + size} stroke={color} strokeWidth="1" strokeOpacity="0.8" />
@@ -38,16 +51,15 @@ function Sparkle({ x, y, size = 8, color, delay = 0 }) {
 }
 
 /* ── Constellation line ─────────────────────────────────────────── */
-function ConLine({ x1, y1, x2, y2, color = "rgba(89,32,161,0.28)", delay = 0, pulse = true }) {
+function ConLine({ x1, y1, x2, y2, color = "rgba(89,32,161,0.28)", delay = 0 }) {
   return (
     <motion.line
       x1={x1} y1={y1} x2={x2} y2={y2}
       stroke={color} strokeWidth="1"
       initial={{ pathLength: 0, opacity: 0 }}
-      whileInView={{ pathLength: 1, opacity: 1 }}
+      whileInView={{ pathLength: 1, opacity: 0.8 }}
       viewport={{ once: true }}
       transition={{ duration: 1.0, delay, ease: [0.16, 1, 0.3, 1] }}
-      animate={pulse ? { opacity: [0.6, 1, 0.6] } : undefined}
     />
   );
 }
@@ -172,11 +184,11 @@ export function CosmicBottomRight({ className = "" }) {
   );
 }
 
-/* ── Orbit ring with glowing dot ────────────────────────────────── */
+/* ── Orbit ring — CSS animation, zero JS cost ───────────────────── */
 export function OrbitRing({ size = 300, x = "50%", y = "50%", color = "primary", speed = 60, className = "" }) {
   const rgb = color === "accent" ? "239,90,152" : color === "secondary" ? "59,64,196" : "89,32,161";
   return (
-    <motion.div
+    <div
       className={`absolute rounded-full pointer-events-none ${className}`}
       style={{
         width: size, height: size,
@@ -184,9 +196,8 @@ export function OrbitRing({ size = 300, x = "50%", y = "50%", color = "primary",
         transform: "translate(-50%,-50%)",
         border: `1px solid rgba(${rgb},0.18)`,
         boxShadow: `inset 0 0 ${size * 0.15}px rgba(${rgb},0.04)`,
+        animation: `cosmic-spin ${speed}s linear infinite`,
       }}
-      animate={{ rotate: 360 }}
-      transition={{ duration: speed, repeat: Infinity, ease: "linear" }}
     >
       <div style={{
         position: "absolute", width: 6, height: 6,
@@ -195,36 +206,32 @@ export function OrbitRing({ size = 300, x = "50%", y = "50%", color = "primary",
         background: `rgba(${rgb},0.85)`,
         boxShadow: `0 0 12px 3px rgba(${rgb},0.55), 0 0 4px rgba(${rgb},0.9)`,
       }} />
-    </motion.div>
+    </div>
   );
 }
 
-/* ── Floating ambient orbs ──────────────────────────────────────── */
+/* ── FloatingOrbs — CSS only, no filter blur (uses gradient instead) */
 const ORB_DATA = [
-  { w:320, h:320, left:"8%",  top:"15%", color:"89,32,161",  op:0.06, dur:22, dx:18, dy:12 },
-  { w:240, h:240, left:"78%", top:"8%",  color:"59,64,196",  op:0.05, dur:28, dx:-14,dy:16 },
-  { w:200, h:200, left:"88%", top:"55%", color:"89,32,161",  op:0.05, dur:18, dx:-10,dy:-8 },
-  { w:280, h:280, left:"5%",  top:"70%", color:"239,90,152", op:0.04, dur:24, dx:12, dy:-14},
-  { w:180, h:180, left:"50%", top:"90%", color:"59,64,196",  op:0.05, dur:20, dx:-8, dy:10 },
+  { w:320, h:320, left:"8%",  top:"15%", color:"89,32,161",  op:0.06, dur:22 },
+  { w:240, h:240, left:"78%", top:"8%",  color:"59,64,196",  op:0.05, dur:28 },
+  { w:200, h:200, left:"88%", top:"55%", color:"89,32,161",  op:0.05, dur:18 },
+  { w:280, h:280, left:"5%",  top:"70%", color:"239,90,152", op:0.04, dur:24 },
+  { w:180, h:180, left:"50%", top:"90%", color:"59,64,196",  op:0.05, dur:20 },
 ];
 
 export function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden>
       {ORB_DATA.map((o, i) => (
-        <motion.div key={i}
+        <div key={i}
           className="absolute rounded-full"
           style={{
             width: o.w, height: o.h,
             left: o.left, top: o.top,
-            background: `radial-gradient(circle, rgba(${o.color},${o.op}) 0%, transparent 70%)`,
-            filter: "blur(40px)",
+            // Radial gradient replaces filter:blur — no paint cost
+            background: `radial-gradient(circle, rgba(${o.color},${o.op * 2}) 0%, rgba(${o.color},${o.op * 0.5}) 40%, transparent 70%)`,
+            animation: `cosmic-float-${i % 3} ${o.dur}s ease-in-out infinite`,
           }}
-          animate={{
-            x: [0, o.dx, -o.dx * 0.5, 0],
-            y: [0, o.dy, -o.dy * 0.5, 0],
-          }}
-          transition={{ duration: o.dur, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
         />
       ))}
     </div>

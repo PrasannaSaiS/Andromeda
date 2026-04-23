@@ -32,7 +32,6 @@ const Section = forwardRef(({
       whileInView="visible"
       viewport={viewportConfig}
       variants={sectionVariants}
-      style={{ willChange: "transform, opacity" }}
     >
       <div className={containerClass}>{children}</div>
     </motion.section>

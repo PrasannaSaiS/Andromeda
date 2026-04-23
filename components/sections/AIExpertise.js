@@ -64,33 +64,29 @@ export default function AIExpertise() {
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="relative w-72 h-72 lg:w-96 lg:h-96">
-            {/* Outer ring */}
-            <motion.div
+            {/* Outer ring — CSS spin */}
+            <div
               className="absolute inset-0 rounded-full border border-dashed border-[var(--color-primary)] opacity-15"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              style={{ animation: "cosmic-spin 40s linear infinite" }}
             />
-            {/* Mid ring */}
-            <motion.div
+            {/* Mid ring — CSS spin reverse */}
+            <div
               className="absolute inset-8 rounded-full border border-[var(--color-secondary)] opacity-10"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+              style={{ animation: "cosmic-spin 28s linear infinite reverse" }}
             />
-            {/* Inner ring */}
-            <motion.div
+            {/* Inner ring — CSS spin */}
+            <div
               className="absolute inset-16 rounded-full border border-[var(--color-primary)] opacity-20"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+              style={{ animation: "cosmic-spin 18s linear infinite" }}
             />
 
-            {/* Orbiting dot */}
-            <motion.div
+            {/* Orbiting dot — CSS spin */}
+            <div
               className="absolute inset-0"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              style={{ animation: "cosmic-spin 8s linear infinite" }}
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[var(--color-accent)] shadow-[0_0_12px_rgba(239,90,152,0.6)]" />
-            </motion.div>
+            </div>
 
             {/* Center */}
             <div className="absolute inset-0 flex items-center justify-center">
