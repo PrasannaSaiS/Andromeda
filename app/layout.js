@@ -1,6 +1,7 @@
 import { Abril_Fatface, Nunito } from "next/font/google";
 import Navbar from "@/components/ui/Navbar";
 import CosmicCanvas from "@/components/ui/CosmicCanvas";
+import CursorGlow from "@/components/ui/CursorGlow";
 import "./globals.css";
 
 const abrilFatface = Abril_Fatface({
@@ -38,6 +39,8 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body id="top" suppressHydrationWarning={true}>
+        {/* Custom cursor — above everything, touch-guarded inside component */}
+        <CursorGlow />
         {/* Cosmic starfield — fixed behind everything */}
         <CosmicCanvas />
         <Navbar />

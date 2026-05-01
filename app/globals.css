@@ -81,6 +81,13 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Hide native cursor on mouse devices only ─────────────────── */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
 /* ── Scroll progress bar ──────────────────── */
 body::before {
   content: "";
@@ -261,6 +268,27 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-primary-dark); }
+
+/* ── Focus ring — visible only on keyboard nav ───────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Responsive image defaults ──────────────────────────── */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Smooth interactive transitions ─────────────────────── */
+a, button {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 /* ============================================
    REDUCED MOTION

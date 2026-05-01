@@ -53,25 +53,52 @@ const SERVICES = [
   },
 ];
 
-function TiltCard({ children, className }) {
-  const ref = useRef(null);
+// ── TiltCard with cursor-following spotlight ──────────────────────
+function TiltCard({ children, className, accentColor }) {
+  const cardRef  = useRef(null);
+  const spotRef  = useRef(null);
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [4, -4]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-4, 4]), { stiffness: 300, damping: 30 });
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [5, -5]),  { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-5, 5]),  { stiffness: 300, damping: 30 });
 
   const onMouseMove = (e) => {
-    const rect = ref.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top)  / rect.height - 0.5);
+    const rect = cardRef.current.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width;
+    const ny = (e.clientY - rect.top)  / rect.height;
+
+    x.set(nx - 0.5);
+    y.set(ny - 0.5);
+
+    // Move spotlight directly via DOM — zero React re-renders
+    if (spotRef.current) {
+      spotRef.current.style.background =
+        `radial-gradient(280px circle at ${nx * 100}% ${ny * 100}%, ${accentColor}18, transparent 65%)`;
+      spotRef.current.style.opacity = "1";
+    }
   };
-  const onMouseLeave = () => { x.set(0); y.set(0); };
+
+  const onMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    if (spotRef.current) spotRef.current.style.opacity = "0";
+  };
 
   return (
-    <motion.div ref={ref} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800 }}
+    <motion.div
+      ref={cardRef}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 900 }}
       className={className}
     >
+      {/* Cursor spotlight — DOM-mutated, no state */}
+      <div
+        ref={spotRef}
+        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+        style={{ opacity: 0, zIndex: 1 }}
+      />
       {children}
     </motion.div>
   );
@@ -98,13 +125,17 @@ export default function Services() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {SERVICES.map((s, i) => (
             <motion.div key={i} variants={fadeUp}>
-              <TiltCard className="h-full">
+              <TiltCard className="h-full relative" accentColor={s.color}>
                 <motion.div
                   className="group relative h-full bg-white rounded-2xl p-8 lg:p-10 border border-[var(--color-border)] cursor-default overflow-hidden"
-                  whileHover={{ borderColor: `${s.color}40`, boxShadow: `0 24px 64px rgba(0,0,0,0.10), 0 0 0 1px ${s.color}20` }}
+                  whileHover={{
+                    borderColor: `${s.color}40`,
+                    boxShadow: `0 24px 64px rgba(0,0,0,0.10), 0 0 0 1px ${s.color}20`,
+                  }}
                   transition={{ duration: 0.3 }}
+                  style={{ position: "relative", zIndex: 2 }}
                 >
-                  {/* Subtle gradient on hover */}
+                  {/* Corner gradient on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
                     style={{ background: `radial-gradient(ellipse 80% 60% at 0% 0%, ${s.color}08, transparent)` }} />
 
@@ -114,7 +145,7 @@ export default function Services() {
                   </div>
 
                   {/* Icon */}
-                  <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-300"
+                  <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-300 group-hover:scale-110"
                     style={{ backgroundColor: `${s.color}12`, color: s.color }}>
                     {s.icon}
                   </div>
