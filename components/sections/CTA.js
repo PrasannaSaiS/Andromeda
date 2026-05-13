@@ -1,13 +1,18 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 
 export default function CTA() {
+  const [mounted, setMounted] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const cardRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const onMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -88,8 +93,8 @@ export default function CTA() {
               aria-hidden
             />
 
-            {/* Floating Particles (Decorative) */}
-            {[...Array(6)].map((_, i) => (
+            {/* Floating Particles (Decorative) — Client side only to avoid hydration mismatch */}
+            {mounted && [...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 bg-white rounded-full opacity-20 pointer-events-none"
