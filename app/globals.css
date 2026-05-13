@@ -7,75 +7,77 @@
 
 :root {
   /* ── Brand palette ── */
-  --color-primary:          #5920a1;
-  --color-primary-dark:     #4a178a;
-  --color-primary-light:    #7b40c8;
-  --color-secondary:        #3b40c4;
-  --color-accent:           #ef5a98;
-  --color-black:            #0a0a0b;
+  --color-primary: #5920a1;
+  --color-primary-dark: #4a178a;
+  --color-primary-light: #7b40c8;
+  --color-secondary: #3b40c4;
+  --color-accent: #ef5a98;
+  --color-black: #0a0a0b;
 
   /* ── Surfaces ── */
-  --color-bg:               #ffffff;
-  --color-surface:          #fafafa;
-  --color-surface-tinted:   #f7f5ff;
-  --color-surface-dark:     #f4f3f8;
+  --color-bg: #ffffff;
+  --color-surface: #fafafa;
+  --color-surface-tinted: #f7f5ff;
+  --color-surface-dark: #f4f3f8;
 
   /* ── Text ── */
-  --color-text:             #0a0a0b;
-  --color-text-secondary:   #4b4b52;
-  --color-muted:            #8b8b96;
+  --color-text: #0a0a0b;
+  --color-text-secondary: #4b4b52;
+  --color-muted: #8b8b96;
 
   /* ── Borders ── */
-  --color-border:           #e8e8ec;
-  --color-border-subtle:    #f0f0f4;
+  --color-border: #e8e8ec;
+  --color-border-subtle: #f0f0f4;
 
   /* ── Typography ── */
-  --font-heading:           var(--font-abril, "Georgia", serif);
-  --font-body:              var(--font-nunito, system-ui, sans-serif);
+  --font-heading: var(--font-abril, "Georgia", serif);
+  --font-body: var(--font-nunito, system-ui, sans-serif);
 
   /* ── Spacing scale ── */
-  --space-1:  0.25rem;
-  --space-2:  0.5rem;
-  --space-3:  0.75rem;
-  --space-4:  1rem;
-  --space-5:  1.5rem;
-  --space-6:  2rem;
-  --space-7:  3rem;
-  --space-8:  4rem;
-  --space-9:  6rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
   --space-10: 8rem;
 
   /* ── Layout ── */
-  --container-px:       clamp(1.25rem, 4vw, 3rem);
-  --max-width-content:  1280px;
-  --section-py:         clamp(5rem, 9vw, 9rem);
-  --navbar-height:      72px;
+  --container-px: clamp(1.25rem, 4vw, 3rem);
+  --max-width-content: 1280px;
+  --section-py: clamp(5rem, 9vw, 9rem);
+  --navbar-height: 72px;
 
   /* ── Motion ── */
-  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out:    cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-@theme inline {
-  --color-primary:          var(--color-primary);
-  --color-primary-dark:     var(--color-primary-dark);
-  --color-primary-light:    var(--color-primary-light);
-  --color-secondary:        var(--color-secondary);
-  --color-accent:           var(--color-accent);
-  --color-bg:               var(--color-bg);
-  --color-surface:          var(--color-surface);
-  --color-surface-tinted:   var(--color-surface-tinted);
-  --color-border:           var(--color-border);
-  --color-muted:            var(--color-muted);
-  --font-heading:           var(--font-heading);
-  --font-body:              var(--font-body);
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-tinted: var(--color-surface-tinted);
+  --color-border: var(--color-border);
+  --color-muted: var(--color-muted);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
 }
 
 /* ============================================
    BASE
    ============================================ */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -112,37 +114,83 @@ body::before {
 
 /* ── Ambient keyframes (compositor only) ── */
 @keyframes ambient-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(12px, -8px) scale(1.02); }
-  66%       { transform: translate(-8px, 10px) scale(0.98); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(12px, -8px) scale(1.02);
+  }
+
+  66% {
+    transform: translate(-8px, 10px) scale(0.98);
+  }
 }
 
 @keyframes star-twinkle {
-  0%, 100% { opacity: var(--star-op, 0.5); }
-  50%       { opacity: calc(var(--star-op, 0.5) * 0.3); }
+
+  0%,
+  100% {
+    opacity: var(--star-op, 0.5);
+  }
+
+  50% {
+    opacity: calc(var(--star-op, 0.5) * 0.3);
+  }
 }
 
 @keyframes orbit-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes scroll-indicator {
-  0%   { transform: translateY(0);   opacity: 0; }
-  20%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateY(44px); opacity: 0; }
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(44px);
+    opacity: 0;
+  }
 }
 
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50%       { opacity: 0.7; transform: scale(1.06); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.06);
+  }
 }
 
 /* ============================================
    TYPOGRAPHY
    ============================================ */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   line-height: 1.08;
   letter-spacing: -0.025em;
@@ -229,10 +277,13 @@ h1, h2, h3, h4, h5, h6 {
 .divider {
   position: relative;
 }
+
 .divider::before {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-border), transparent);
 }
@@ -266,8 +317,8 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--color-border);
   border-radius: 1.25rem;
   transition: box-shadow 0.3s var(--ease-out-expo),
-              border-color 0.3s var(--ease-out-expo),
-              transform 0.3s var(--ease-out-expo);
+    border-color 0.3s var(--ease-out-expo),
+    transform 0.3s var(--ease-out-expo);
 }
 
 .card:hover {
@@ -285,10 +336,22 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-primary);
 }
 
-::-webkit-scrollbar       { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(89,32,161,0.25); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(89, 32, 161, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
 
 /* ── Focus ring ── */
 :focus-visible {
@@ -298,14 +361,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Media defaults ── */
-img, video {
+img,
+video {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
 /* ── Smooth transitions ── */
-a, button {
+a,
+button {
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 200ms;
   transition-timing-function: var(--ease-out-expo);
@@ -363,8 +428,13 @@ a, button {
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

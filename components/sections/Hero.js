@@ -26,9 +26,24 @@ const PARTNERS = [
   { id: 8, name: "Apex", logo: "M12 2L2 12l10 10 10-10L12 2zm0 4l6 6-6 6-6-6 6-6z" },
 ];
 
+const ShootingStar = ({ delay = 0, top = "20%", left = "-10%" }) => (
+  <motion.div
+    initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+    animate={{ 
+      x: ["0vw", "120vw"], 
+      y: ["0vh", "50vh"], 
+      opacity: [0, 1, 1, 0],
+      scale: [0, 1.5, 1.5, 0]
+    }}
+    transition={{ duration: 1.8, delay, ease: [0.16, 1, 0.3, 1] }}
+    className="absolute h-px bg-gradient-to-r from-transparent via-white to-transparent rotate-[20deg] z-[1] pointer-events-none w-[200px]"
+    style={{ top, left }}
+  />
+);
+
 const InfiniteMarquee = () => {
   return (
-    <div className="relative w-full overflow-hidden border-t border-[var(--color-border-subtle)] bg-white/70 backdrop-blur-xl pt-10 pb-12 z-20">
+    <div className="relative w-full overflow-hidden border-t border-[var(--color-border-subtle)] bg-white/70 backdrop-blur-xl pt-10 pb-12 z-10">
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -77,15 +92,17 @@ export default function Hero() {
   const ref = useRef(null);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const scrollY  = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
+  const scrollY  = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
   const scrollOp = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const orbX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-35, 35]), PARALLAX_SPRING);
-  const orbY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-35, 35]), PARALLAX_SPRING);
-  const textX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), PARALLAX_SPRING);
-  const textY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-12, 12]), PARALLAX_SPRING);
+  const orbX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-45, 45]), PARALLAX_SPRING);
+  const orbY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-45, 45]), PARALLAX_SPRING);
+
+  // Subtle interactive light coordinates
+  const lightX = useSpring(useTransform(mouseX, [-0.5, 0.5], ["35%", "65%"]), PARALLAX_SPRING);
+  const lightY = useSpring(useTransform(mouseY, [-0.5, 0.5], ["35%", "65%"]), PARALLAX_SPRING);
 
   useEffect(() => {
     const isTouch  = window.matchMedia("(pointer: coarse)").matches;
@@ -160,13 +177,51 @@ export default function Hero() {
         }}
       />
 
+      {/* ── Neural Network Pattern Layer (Visible on Hover) ── */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0 opacity-40"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%235920a1' fill-opacity='0.6'/%3E%3Ccircle cx='60' cy='60' r='1' fill='%235920a1' fill-opacity='0.3'/%3E%3Cpath d='M2 2 L60 60' stroke='%235920a1' stroke-width='0.5' stroke-opacity='0.15'/%3E%3Cpath d='M60 60 L120 2' stroke='%235920a1' stroke-width='0.5' stroke-opacity='0.1'/%3E%3C/svg%3E")`,
+          backgroundSize: "120px 120px",
+          maskImage: useTransform(
+            [lightX, lightY],
+            ([x, y]) => `radial-gradient(circle 350px at ${x} ${y}, black 10%, transparent 80%)`
+          ),
+          WebkitMaskImage: useTransform(
+            [lightX, lightY],
+            ([x, y]) => `radial-gradient(circle 350px at ${x} ${y}, black 10%, transparent 80%)`
+          )
+        }}
+        aria-hidden
+      />
+
+      {/* ── Enhanced Cosmic Interaction Layer ── */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{
+          background: useTransform(
+            [lightX, lightY],
+            ([x, y]) => `
+              radial-gradient(circle 450px at ${x} ${y}, rgba(89,32,161,0.12), transparent 100%),
+              radial-gradient(circle 180px at ${x} ${y}, rgba(239,90,152,0.08), transparent 100%)
+            `
+          )
+        }}
+        aria-hidden
+      />
+
+      {/* ── Shooting Star Intro ── */}
+      <ShootingStar delay={0.4} top="15%" left="-5%" />
+      <ShootingStar delay={0.7} top="40%" left="-15%" />
+      <ShootingStar delay={1.1} top="10%" left="20%" />
+
       <div className="flex-1 w-full" />
 
       <motion.div
         style={{ y: scrollY, opacity: scrollOp }}
-        className="relative z-10 w-full flex flex-col items-center text-center px-4 sm:px-6 md:px-8 mt-24"
+        className="relative z-20 w-full flex flex-col items-center text-center px-4 sm:px-6 md:px-8 mt-24"
       >
-        <motion.div style={{ x: textX, y: textY }} className="flex flex-col items-center w-full max-w-5xl mx-auto">
+        <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
           
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 24 }}
@@ -247,34 +302,10 @@ export default function Hero() {
               </motion.svg>
             </motion.a>
           </motion.div>
-        </motion.div>
+        </div>
       </motion.div>
 
-      <div className="flex-1 w-full flex items-end justify-center pb-14 md:pb-20 relative z-10">
-        <motion.div
-          className="flex flex-col items-center gap-4 cursor-pointer group"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.6, duration: 1 }}
-          onClick={(e) => scrollTo(e, "#services")}
-        >
-          <span className="text-[0.625rem] uppercase tracking-[0.25em] text-black/30 font-bold group-hover:text-[var(--color-primary)] transition-colors">Scroll</span>
-          <div className="w-[1.5px] h-14 bg-black/10 relative overflow-hidden rounded-full group-hover:bg-black/15 transition-colors">
-            <motion.div
-              className="w-full h-1/2 bg-[var(--color-primary)] absolute top-0 rounded-full"
-              animate={{ 
-                y: ["-100%", "200%"],
-                opacity: [0, 1, 0]
-              }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-          </div>
-        </motion.div>
-      </div>
+      <div className="flex-1 w-full" />
 
       <motion.div 
         className="w-full"
