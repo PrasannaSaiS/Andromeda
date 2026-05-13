@@ -1,7 +1,6 @@
 import { Abril_Fatface, Nunito } from "next/font/google";
 import Navbar from "@/components/ui/Navbar";
-import CosmicCanvas from "@/components/ui/CosmicCanvas";
-import CursorGlow from "@/components/ui/CursorGlow";
+import AmbientCanvas from "@/components/ui/AmbientCanvas";
 import "./globals.css";
 
 const abrilFatface = Abril_Fatface({
@@ -21,11 +20,11 @@ const nunito = Nunito({
 export const metadata = {
   title: "Andromeda — We build what comes next",
   description:
-    "Andromeda is an AI-first company building backend systems, SaaS platforms, AI/ML solutions, and developer tools for the future.",
-  keywords: ["AI", "SaaS", "developer tools", "machine learning", "backend systems", "Andromeda"],
+    "Andromeda is an AI-first technology company building backend systems, SaaS platforms, AI/ML solutions, developer tools, and intelligent applications.",
+  keywords: ["AI", "SaaS", "developer tools", "machine learning", "backend systems", "full stack", "Andromeda"],
   openGraph: {
     title: "Andromeda — We build what comes next",
-    description: "AI-first infrastructure for the next generation of technology.",
+    description: "AI-first technology company building the infrastructure of tomorrow.",
     type: "website",
     locale: "en_US",
   },
@@ -39,12 +38,9 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body id="top" suppressHydrationWarning={true}>
-        {/* Custom cursor — above everything, touch-guarded inside component */}
-        <CursorGlow />
-        {/* Cosmic starfield — fixed behind everything */}
-        <CosmicCanvas />
+        {/* Minimal ambient starfield — subtle, behind everything */}
+        <AmbientCanvas />
         <Navbar />
-        {/* All page content sits above the canvas */}
         <div className="relative" style={{ zIndex: 1 }}>
           {children}
         </div>

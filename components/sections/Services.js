@@ -2,28 +2,30 @@
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import Section from "@/components/ui/Section";
 import { fadeUp, staggerContainer } from "@/lib/motion";
-import { CosmicTopRight, CosmicBottomLeft } from "@/components/ui/CosmicCorners";
 
 const SERVICES = [
   {
+    number: "01",
     title: "Backend Systems",
-    description: "Robust, scalable server architectures built for high availability and extreme performance.",
+    description: "Scalable, resilient server architectures engineered for high-availability and extreme performance at any scale.",
     color: "#5920a1",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/>
-        <line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="20" height="8" x="2" y="2" rx="2"/>
+        <rect width="20" height="8" x="2" y="14" rx="2"/>
+        <line x1="6" x2="6.01" y1="6" y2="6"/>
+        <line x1="6" x2="6.01" y1="18" y2="18"/>
       </svg>
     ),
   },
   {
+    number: "02",
     title: "AI & Machine Learning",
-    description: "Production-grade intelligence integrated directly into your core product.",
+    description: "Production-grade intelligence pipelines — from neural architecture to inference. We build the refinery, you own the ore.",
     color: "#3b40c4",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
         <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
         <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/>
@@ -31,57 +33,55 @@ const SERVICES = [
     ),
   },
   {
-    title: "SaaS Development",
-    description: "End-to-end platform engineering with sophisticated billing, auth, and state management.",
-    color: "#ef5a98",
+    number: "03",
+    title: "SaaS Platforms",
+    description: "End-to-end platform engineering with auth, billing, real-time sync, and analytics — built for growth from day one.",
+    color: "#5920a1",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-        <polyline points="2 12 12 17 22 12"/><polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
+        <polyline points="2 17 12 22 22 17"/>
       </svg>
     ),
   },
   {
+    number: "04",
     title: "Full Stack Engineering",
-    description: "Seamless integration from database to UI with flawless user experiences.",
+    description: "Seamless integration from database to UI. We close the gap between beautiful and bulletproof.",
     color: "#3b40c4",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="4 17 10 11 4 5"/>
+        <line x1="12" x2="20" y1="19" y2="19"/>
       </svg>
     ),
   },
 ];
 
-// ── TiltCard with cursor-following spotlight ──────────────────────
-function TiltCard({ children, className, accentColor }) {
-  const cardRef  = useRef(null);
-  const spotRef  = useRef(null);
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [5, -5]),  { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-5, 5]),  { stiffness: 300, damping: 30 });
+function ServiceCard({ service }) {
+  const cardRef = useRef(null);
+  const spotRef = useRef(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotX = useSpring(useTransform(my, [-0.5, 0.5], [4, -4]), { stiffness: 280, damping: 30 });
+  const rotY = useSpring(useTransform(mx, [-0.5, 0.5], [-4, 4]), { stiffness: 280, damping: 30 });
 
   const onMouseMove = (e) => {
-    const rect = cardRef.current.getBoundingClientRect();
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
     const nx = (e.clientX - rect.left) / rect.width;
     const ny = (e.clientY - rect.top)  / rect.height;
-
-    x.set(nx - 0.5);
-    y.set(ny - 0.5);
-
-    // Move spotlight directly via DOM — zero React re-renders
+    mx.set(nx - 0.5);
+    my.set(ny - 0.5);
     if (spotRef.current) {
-      spotRef.current.style.background =
-        `radial-gradient(280px circle at ${nx * 100}% ${ny * 100}%, ${accentColor}18, transparent 65%)`;
+      spotRef.current.style.background = `radial-gradient(320px circle at ${nx * 100}% ${ny * 100}%, ${service.color}14, transparent 65%)`;
       spotRef.current.style.opacity = "1";
     }
   };
 
   const onMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    mx.set(0); my.set(0);
     if (spotRef.current) spotRef.current.style.opacity = "0";
   };
 
@@ -90,78 +90,97 @@ function TiltCard({ children, className, accentColor }) {
       ref={cardRef}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 900 }}
-      className={className}
+      style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d", perspective: 900 }}
+      variants={fadeUp}
     >
-      {/* Cursor spotlight — DOM-mutated, no state */}
       <div
-        ref={spotRef}
-        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
-        style={{ opacity: 0, zIndex: 1 }}
-      />
-      {children}
+        className="relative h-full bg-white rounded-2xl p-8 lg:p-10 border border-[var(--color-border)] overflow-hidden group cursor-default transition-all duration-400"
+        style={{
+          transition: "box-shadow 0.3s, border-color 0.3s",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = `${service.color}30`;
+          e.currentTarget.style.boxShadow = `0 20px 60px rgba(0,0,0,0.09), 0 0 0 1px ${service.color}18`;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "";
+          e.currentTarget.style.boxShadow = "";
+        }}
+      >
+        {/* Cursor spotlight */}
+        <div
+          ref={spotRef}
+          className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+          style={{ opacity: 0, zIndex: 0 }}
+        />
+
+        <div className="relative z-10">
+          {/* Number + Icon row */}
+          <div className="flex items-start justify-between mb-8">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+              style={{ backgroundColor: `${service.color}10`, color: service.color }}
+            >
+              {service.icon}
+            </div>
+            <span className="text-[0.75rem] font-bold tabular-nums text-black/12 font-heading tracking-widest">
+              {service.number}
+            </span>
+          </div>
+
+          <h3 className="text-h3 mb-3 font-heading">{service.title}</h3>
+          <p className="text-body-sm text-[var(--color-text-secondary)] leading-relaxed">{service.description}</p>
+
+          {/* Expanding accent line */}
+          <div
+            className="mt-8 h-px w-0 group-hover:w-full transition-all duration-500 ease-out rounded-full"
+            style={{ background: `linear-gradient(90deg, ${service.color}60, transparent)` }}
+          />
+        </div>
+      </div>
     </motion.div>
   );
 }
 
 export default function Services() {
   return (
-    <Section id="services" className="section-padding bg-white section-divide-top relative overflow-hidden">
-      <CosmicTopRight className="opacity-70" />
-      <CosmicBottomLeft className="opacity-50" />
-      <motion.div
-        initial="hidden" whileInView="visible"
-        viewport={{ once: true, amount: 0.08 }}
-        variants={staggerContainer(0.08)}
-      >
-        <motion.div variants={fadeUp} className="mb-16 max-w-2xl mx-auto text-center">
-          <span className="text-overline text-[var(--color-primary)] mb-4 block">THE CONSTELLATION</span>
-          <h2 className="text-h1 mb-5">Capabilities designed for the future</h2>
-          <p className="text-body text-black/60 mx-auto">
-            We bring high-end engineering to ambitious teams. Our focus is narrow so our impact can be deep.
-          </p>
+    <section
+      id="services"
+      className="section-py divider relative bg-[var(--color-surface)] overflow-hidden"
+    >
+      {/* Very subtle tinted gradient */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 40% at 80% 20%, rgba(89,32,161,0.03) 0%, transparent 70%)" }}
+        aria-hidden
+      />
+
+      <div className="container">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.08 }}
+          variants={staggerContainer(0.08)}
+        >
+          {/* Section header */}
+          <motion.div variants={fadeUp} className="mb-16 max-w-xl">
+            <span className="text-overline text-[var(--color-primary)] mb-4 block">Capabilities</span>
+            <h2 className="text-h1 mb-5">
+              Built for the engineering challenges that matter
+            </h2>
+            <p className="text-body text-[var(--color-muted)]">
+              Narrow focus. Deep impact. We bring senior-level engineering to the problems other teams avoid.
+            </p>
+          </motion.div>
+
+          {/* Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {SERVICES.map((s, i) => (
+              <ServiceCard key={i} service={s} />
+            ))}
+          </div>
         </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SERVICES.map((s, i) => (
-            <motion.div key={i} variants={fadeUp}>
-              <TiltCard className="h-full relative" accentColor={s.color}>
-                <motion.div
-                  className="group relative h-full bg-white rounded-2xl p-8 lg:p-10 border border-[var(--color-border)] cursor-default overflow-hidden"
-                  whileHover={{
-                    borderColor: `${s.color}40`,
-                    boxShadow: `0 24px 64px rgba(0,0,0,0.10), 0 0 0 1px ${s.color}20`,
-                  }}
-                  transition={{ duration: 0.3 }}
-                  style={{ position: "relative", zIndex: 2 }}
-                >
-                  {/* Corner gradient on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
-                    style={{ background: `radial-gradient(ellipse 80% 60% at 0% 0%, ${s.color}08, transparent)` }} />
-
-                  {/* Number badge */}
-                  <div className="absolute top-8 right-8 text-[0.75rem] font-bold tabular-nums text-black/15 font-heading">
-                    0{i + 1}
-                  </div>
-
-                  {/* Icon */}
-                  <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-300 group-hover:scale-110"
-                    style={{ backgroundColor: `${s.color}12`, color: s.color }}>
-                    {s.icon}
-                  </div>
-
-                  <h3 className="text-h3 mb-3 font-heading">{s.title}</h3>
-                  <p className="text-body-sm text-black/60 leading-relaxed">{s.description}</p>
-
-                  {/* Bottom accent line */}
-                  <div className="mt-8 h-px w-0 group-hover:w-full transition-all duration-500 ease-out rounded-full"
-                    style={{ background: `linear-gradient(90deg, ${s.color}, transparent)` }} />
-                </motion.div>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-    </Section>
+      </div>
+    </section>
   );
 }
