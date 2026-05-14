@@ -1,6 +1,7 @@
 import { Abril_Fatface, Nunito } from "next/font/google";
 import Navbar from "@/components/ui/Navbar";
 import AmbientCanvas from "@/components/ui/AmbientCanvas";
+import { SITE } from "@/lib/constants";
 import "./globals.css";
 
 const abrilFatface = Abril_Fatface({
@@ -18,13 +19,12 @@ const nunito = Nunito({
 });
 
 export const metadata = {
-  title: "Andromeda — We build what comes next",
-  description:
-    "Andromeda is an AI-first technology company building backend systems, SaaS platforms, AI/ML solutions, developer tools, and intelligent applications.",
-  keywords: ["AI", "SaaS", "developer tools", "machine learning", "backend systems", "full stack", "Andromeda"],
+  title: `${SITE.name} — ${SITE.tagline}`,
+  description: SITE.description,
+  keywords: ["AI", "SaaS", "developer tools", "machine learning", "backend systems", "full stack", SITE.name],
   openGraph: {
-    title: "Andromeda — We build what comes next",
-    description: "AI-first technology company building the infrastructure of tomorrow.",
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE.description,
     type: "website",
     locale: "en_US",
   },

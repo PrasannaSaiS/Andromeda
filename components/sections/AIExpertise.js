@@ -3,30 +3,8 @@
 import { motion } from "framer-motion";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 
-const EXPERTISE_ITEMS = [
-  {
-    label: "Artificial Intelligence",
-    desc: "LLM integration, fine-tuning, and custom model development",
-  },
-  {
-    label: "Machine Learning",
-    desc: "Prediction pipelines, recommender systems, and anomaly detection",
-  },
-  {
-    label: "Deep Learning",
-    desc: "Neural architectures for vision, language, and multimodal tasks",
-  },
-  {
-    label: "Data Infrastructure",
-    desc: "Scalable data pipelines, warehouses, and real-time stream processing",
-  },
-];
+import { AI_EXPERTISE, AI_DIFFERENTIATORS } from "@/lib/constants";
 
-const DIFFERENTIATORS = [
-  { value: "100%", label: "AI-native architecture" },
-  { value: "Edge",  label: "Inference deployment" },
-  { value: "0",     label: "Black-box APIs relied upon" },
-];
 
 export default function AIExpertise() {
   return (
@@ -66,7 +44,7 @@ export default function AIExpertise() {
             </motion.p>
 
             <motion.ul className="space-y-5" variants={staggerContainer(0.08)}>
-              {EXPERTISE_ITEMS.map((item, i) => (
+              {AI_EXPERTISE.map((item, i) => (
                 <motion.li
                   key={i}
                   variants={fadeUp}
@@ -166,7 +144,7 @@ export default function AIExpertise() {
 
               {/* Stats overlaid */}
               <div className="absolute -bottom-14 left-0 right-0 flex items-center justify-center gap-8">
-                {DIFFERENTIATORS.map((d, i) => (
+                {AI_DIFFERENTIATORS.map((d, i) => (
                   <div key={i} className="text-center">
                     <div className="text-[1.375rem] font-heading text-[var(--color-primary)] leading-none">{d.value}</div>
                     <div className="text-[0.6875rem] text-[var(--color-muted)] mt-0.5">{d.label}</div>

@@ -3,36 +3,8 @@
 import { motion } from "framer-motion";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 
-const STEPS = [
-  {
-    number: "01",
-    title: "Discover",
-    description:
-      "We immerse in your domain, map constraints, and define the exact problem worth solving. No assumptions, no shortcuts.",
-    accent: "#5920a1",
-  },
-  {
-    number: "02",
-    title: "Architect",
-    description:
-      "We design systems built to last — scalable, maintainable, and elegant from the foundation up.",
-    accent: "#3b40c4",
-  },
-  {
-    number: "03",
-    title: "Build",
-    description:
-      "Rapid, iterative engineering with continuous feedback loops. You see real progress, not a black box.",
-    accent: "#5920a1",
-  },
-  {
-    number: "04",
-    title: "Launch & Partner",
-    description:
-      "Battle-tested deployment with monitoring, scaling, and ongoing collaboration. We ship, then we stay.",
-    accent: "#3b40c4",
-  },
-];
+import { PROCESS_STEPS } from "@/lib/constants";
+
 
 export default function Process() {
   return (
@@ -74,7 +46,7 @@ export default function Process() {
               aria-hidden
             />
 
-            {STEPS.map((step, i) => (
+            {PROCESS_STEPS.map((step, i) => (
               <motion.div
                 key={i}
                 variants={fadeUp}

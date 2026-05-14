@@ -3,35 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const FOOTER_COLS = [
-  {
-    heading: "Product",
-    links: [
-      { label: "Backend Systems", href: "#services" },
-      { label: "SaaS Platforms",  href: "#services" },
-      { label: "AI Solutions",    href: "#ai-expertise" },
-      { label: "Developer Tools", href: "#products" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "About",   href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Blog",    href: "#" },
-      { label: "Press",   href: "#" },
-    ],
-  },
-  {
-    heading: "Resources",
-    links: [
-      { label: "Documentation", href: "#" },
-      { label: "API Reference", href: "#" },
-      { label: "Status",        href: "#" },
-      { label: "Changelog",     href: "#" },
-    ],
-  },
-];
+import { FOOTER_COLS } from "@/lib/constants";
+
 
 const SOCIALS = [
   {

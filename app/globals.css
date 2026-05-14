@@ -147,25 +147,7 @@ body::before {
   }
 }
 
-@keyframes scroll-indicator {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
 
-  20% {
-    opacity: 1;
-  }
-
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateY(44px);
-    opacity: 0;
-  }
-}
 
 @keyframes glow-pulse {
 

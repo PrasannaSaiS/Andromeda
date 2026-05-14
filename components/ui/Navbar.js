@@ -5,13 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { cinematicScroll } from "@/lib/cinematicScroll";
 
-const NAV_LINKS = [
-  { name: "Capabilities", href: "#services"     },
-  { name: "Products",     href: "#products"     },
-  { name: "AI",          href: "#ai-expertise" },
-  { name: "Process",     href: "#process"      },
-  { name: "Contact",     href: "#contact"      },
-];
+import { NAV_LINKS } from "@/lib/constants";
+
 
 export default function Navbar() {
   const [scrolled, setScrolled]         = useState(false);
